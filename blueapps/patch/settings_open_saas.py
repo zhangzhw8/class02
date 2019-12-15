@@ -40,14 +40,18 @@ if 'BK_BROKER_URL' in os.environ:
 # SITE_URL,STATIC_URL,,FORCE_SCRIPT_NAME
 # 测试环境
 if os.getenv('BK_ENV') == 'testing':
-    BK_URL = os.environ.get("BK_URL", "%s/console/" % BK_PAAS_HOST)
     SITE_URL = os.environ.get("BK_SITE_URL", '/t/%s/' % APP_CODE)
-    STATIC_URL = '%sstatic/' % SITE_URL
 # 正式环境
-if os.getenv('BK_ENV') == 'production':
-    BK_URL = os.environ.get("BK_URL", "%s/console/" % BK_PAAS_HOST)
+elif os.getenv('BK_ENV') == 'production':
     SITE_URL = os.environ.get("BK_SITE_URL", '/o/%s/' % APP_CODE)
-    STATIC_URL = '%sstatic/' % SITE_URL
+else:
+    SITE_URL = os.environ.get("BK_SITE_URL", '/')
+
+BK_URL = os.environ.get("BK_URL", "%s/console/" % BK_PAAS_HOST)
+STATIC_URL = '%sstatic/' % SITE_URL
+
+# APP 微信 ROOT URL
+WEIXIN_SITE_URL = '%s%s/' % (SITE_URL, WEIXIN_URL_PREFIX)
 
 # REMOTE_STATIC_URL
 REMOTE_STATIC_URL = '%sremote/' % STATIC_URL

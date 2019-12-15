@@ -69,6 +69,7 @@ class RequestProvider(MiddlewareMixin):
             bool(settings.RE_WECHAT.search(
                 request.META.get('HTTP_USER_AGENT', ''))
             ) and request_origin_url == settings.WEIXIN_BK_URL and
+            request.path.startswith(settings.WEIXIN_SITE_URL) and
             not request.is_rio()
         )
 

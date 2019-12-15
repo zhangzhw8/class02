@@ -1,35 +1,32 @@
 from collections import Counter
 
-from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+
 # Create your views here.
 from blueapps.account.models import User
 from blueking.component.shortcuts import get_client_by_request
 from moments.celery_tasks import notify_like
 from weixin.core.accounts import WeixinAccount
 from .models import Status, Reply
-from django.conf import settings
 
 
 def home(request):
     return render(request, "homepage.html")
 
 
-@login_required
 def show_user(request):
     po = User.objects.get(username=request.user)
     return render(request, "user.html", {"user": po})
 
 
-@login_required
 def friends(request):
     return render(request, "friends.html")
 
 
-@login_required
 def show_status(request):
     keyword = request.GET.get("keyword", "")
     page = request.GET.get("page", "1")
@@ -53,7 +50,6 @@ def show_status(request):
                                            })
 
 
-@login_required
 def submit_post(request):
     user = User.objects.get(username=request.user)
     text = request.POST.get("text")
@@ -78,7 +74,6 @@ def submit_post(request):
     return render(request, "my_post.html")
 
 
-@login_required
 def like(request):
     user = request.user.username
     status_id = request.POST.get("status_id")
@@ -95,7 +90,6 @@ def like(request):
     return JsonResponse({"result": True})
 
 
-@login_required
 def comment(request):
     user = request.user.username
     status_id = request.POST.get("status_id")
@@ -106,14 +100,12 @@ def comment(request):
     return JsonResponse({"result": True})
 
 
-@login_required
 def delete_comment(request):
     comment_id = request.POST.get("comment_id")
     Reply.objects.filter(id=comment_id).delete()
     return JsonResponse({"result": True})
 
 
-@login_required
 def report(request):
     return render(request, "report.html")
 

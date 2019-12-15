@@ -23,6 +23,8 @@ from blueapps.conf.default_settings import *  # noqa
 INSTALLED_APPS += (
     'home_application',
     'mako_application',
+    'weixin.core',
+    'weixin'
 )
 
 # 这里是默认的中间件，大部分情况下，不需要改动
@@ -49,8 +51,54 @@ INSTALLED_APPS += (
 # )
 
 # 自定义中间件
-MIDDLEWARE += (
+MIDDLEWARE = (
+    'weixin.core.middlewares.WeixinProxyPatchMiddleware',
+) + MIDDLEWARE + (
+    'weixin.core.middlewares.WeixinAuthenticationMiddleware',
+    'weixin.core.middlewares.WeixinLoginMiddleware',
 )
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': (
+            os.path.join(BASE_DIR, 'templates'),
+        ),
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'blueapps.template.context_processors.blue_settings',
+                # for weixin
+                'weixin.core.context_processors.basic'
+            ],
+        },
+    },
+    {
+        'BACKEND': 'blueapps.template.backends.mako.MakoTemplates',
+        'DIRS': (
+            os.path.join(BASE_DIR, MAKO_DIR_NAME),
+        ),
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'blueapps.template.context_processors.blue_settings',
+                # for weixin
+                'weixin.core.context_processors.basic'
+            ],
+            # mako templates cache, None means not using cache
+            'module_directory': os.path.join(os.path.dirname(BASE_DIR),
+                                             'templates_module', APP_CODE)
+        },
+    },
+]
 
 # 所有环境的日志级别可以在这里配置
 # LOG_LEVEL = 'INFO'
@@ -65,7 +113,7 @@ MIDDLEWARE += (
 STATIC_VERSION = '1.0'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 # CELERY 开关，使用时请改为 True，否则请保持为False。启动方式为以下两行命令：

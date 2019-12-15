@@ -127,7 +127,7 @@
 
         function like(status_id) {
             $.ajax({
-                url: '{{ SITE_URL }}like',
+                url: '{{ ADAPT_SITE_URL }}like',
                 type: 'post',
                 data: {
                     'status_id': status_id,
@@ -149,7 +149,7 @@
 
         function comment() {
             $.ajax({
-                url: "{{ SITE_URL }}comment",
+                url: "{{ ADAPT_SITE_URL }}comment",
                 type: "post",
                 data: {
                     "status_id": $("#myModal").attr("status_id"),
@@ -166,7 +166,7 @@
         function delete_comment() {
             comment_id = $("#deleteConfirm").attr("comment_id")
             $.ajax({
-                url: "{{ SITE_URL }}comment/delete",
+                url: "{{ ADAPT_SITE_URL }}comment/delete",
                 type: "post",
                 data: {
                     "comment_id": comment_id,

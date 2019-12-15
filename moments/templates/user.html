@@ -45,7 +45,7 @@
     <script>
         function update_user(){
             $.ajax({
-                url: "{{ SITE_URL }}user/update",
+                url: "{{ ADAPT_SITE_URL }}user/update",
                 type: "post",
                 data: {
                     "region": $("#region").val(),

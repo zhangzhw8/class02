@@ -9,6 +9,7 @@ from django.http import HttpResponse, JsonResponse
 from blueapps.account.models import User
 from blueking.component.shortcuts import get_client_by_request
 from moments.celery_tasks import notify_like
+from weixin.core.accounts import WeixinAccount
 from .models import Status, Reply
 from django.conf import settings
 
@@ -69,7 +70,10 @@ def submit_post(request):
     if text:
         status = Status(user=user, text=text, pics=name)
         status.save()
-        return redirect("{}status".format(settings.SITE_URL))
+
+        is_weixin_visit = WeixinAccount().is_weixin_visit(request)
+        adapt_site_url = settings.WEIXIN_SITE_URL if is_weixin_visit else settings.SITE_URL
+        return redirect("{}status".format(adapt_site_url))
 
     return render(request, "my_post.html")
 

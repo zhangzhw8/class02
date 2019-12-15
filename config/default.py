@@ -74,7 +74,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'blueapps.template.context_processors.blue_settings',
                 # for weixin
-                'weixin.core.context_processors.basic'
+                'weixin.core.context_processors.basic',
+                # for moments
+                'moments.context_processors.basic'
             ],
         },
     },
